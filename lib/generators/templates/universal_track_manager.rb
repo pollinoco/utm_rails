@@ -4,6 +4,6 @@ UniversalTrackManager.configure do |config|
   config.track_user_agent = true
   # GENERATOR INSERTS CAMPAIGN COLUMN CONFIG HERE
 
-  # config.track_http_referrer = false
+  # config.track_http_referer = false
 
 end

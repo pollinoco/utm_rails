@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.date        = Time.now.strftime("%Y-%m-%d")
   s.summary     = "A gem to track visitors and their UTMs to your website."
-  s.description = "Simple, plug & play visitor tracking by user agent (browser), IP address, referrer, and UTM parameters."
+  s.description = "Simple, plug & play visitor tracking by user agent (browser), IP address, referer, and UTM parameters."
   s.authors     = ["Jason Fleetwood-Boldt"]
   s.email       = 'support@heliosdev.shop'
 
