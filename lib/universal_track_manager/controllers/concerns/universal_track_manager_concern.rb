@@ -48,8 +48,8 @@ module UniversalTrackManagerConcern
       store_id:
     }
 
-    if request.referer && !request.referer.include?(request.host) && UniversalTrackManager.track_http_referrer?
-      params[:referer] = request.referer
+    if request.referrer && !request.referrer.include?(request.host) && UniversalTrackManager.track_http_referrer?
+      params[:referrer] = request.referrer
     end
 
     params[:browser] = find_or_create_browser_by_current if request.user_agent
@@ -71,9 +71,9 @@ module UniversalTrackManagerConcern
         evict_visit!(existing_visit) if existing_visit.browser && existing_visit.browser.name != user_agent
 
         if UniversalTrackManager.track_http_referrer?
-          if existing_visit.referer == request.referer
+          if existing_visit.referrer == request.referrer
 
-          elsif request.referer && !request.referer.include?(request.host)
+          elsif request.referrer && !request.referrer.include?(request.host)
             evict_visit!(existing_visit)
           end
         end
