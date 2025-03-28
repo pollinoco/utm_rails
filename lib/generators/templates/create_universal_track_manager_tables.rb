@@ -30,6 +30,7 @@ class CreateUniversalTrackManagerTables < ActiveRecord::Migration<%= migration_v
         t.integer :campaign_id
         t.integer :browser_id
         t.string :ip_v4_address, limit: 15
+        t.string :referer
 
         t.integer :viewport_width
         t.integer :viewport_height
