@@ -57,7 +57,7 @@ module UniversalTrackManager
 
       column_defs = ""
       @default_params.each  do |p|
-        column_defs += "          t.string :#{p}, limit:256\n"
+        column_defs += "          t.string :#{p}, limit: 256\n"
       end
       copy_file "create_universal_track_manager_tables.rb", "#{self.class.source_root}/create_universal_track_manager_tables.rb-staged"
       gsub_file "#{self.class.source_root}/create_universal_track_manager_tables.rb-staged", "#GENERATOR INSERTS CAMPAIGN COLUMNS HERE", column_defs
