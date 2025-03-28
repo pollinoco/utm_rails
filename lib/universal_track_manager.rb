@@ -4,7 +4,12 @@ module UniversalTrackManager
   require "railtie.rb" if defined?(Rails)
 
   class Settings
-    attr_accessor :track_ips, :track_utms, :track_user_agent, :track_http_referrer, :campaign_columns
+    attr_accessor :track_ips,
+                  :track_utms,
+                  :track_user_agent,
+                  :track_http_referrer,
+                  :campaign_columns,
+                  :track_gclid_present
   end
 
   def self.configure(&block)
@@ -27,6 +32,10 @@ module UniversalTrackManager
 
   def self.track_http_referrer?
     @_settings.track_http_referrer
+  end
+
+  def self.track_gclid_present?
+    @_settings.track_gclid_present
   end
 
   def self.campaign_column_names

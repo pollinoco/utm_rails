@@ -47,6 +47,11 @@ module UniversalTrackManagerConcern
       campaign: find_or_create_campaign_by_current,
       store_id:
     }
+
+    if request.referer && !request.referer.include?(request.host) && UniversalTrackManager.track_http_referrer?
+      params[:referer] = request.referer
+    end
+
     params[:browser] = find_or_create_browser_by_current if request.user_agent
     visit = UniversalTrackManager::Visit.create!(params)
     session[:visit_id] = visit.id
@@ -62,7 +67,16 @@ module UniversalTrackManagerConcern
         evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
 
         evict_visit!(existing_visit) if existing_visit.ip_v4_address != ip_address
+
         evict_visit!(existing_visit) if existing_visit.browser && existing_visit.browser.name != user_agent
+
+        if UniversalTrackManager.track_http_referrer?
+          if existing_visit.referer == request.referer
+
+          elsif request.referer && !request.referer.include?(request.host)
+            evict_visit!(existing_visit)
+          end
+        end
 
         existing_visit.update_columns(last_pageload: Time.zone.now) unless @visit_evicted
       rescue ActiveRecord::RecordNotFound
@@ -86,24 +100,30 @@ module UniversalTrackManagerConcern
   def find_or_create_browser_by_current
     return nil unless UniversalTrackManager.track_user_agent?
 
-    browser = UniversalTrackManager::Browser.find_or_create_by(name: user_agent)
+    UniversalTrackManager::Browser.find_or_create_by(name: user_agent)
   end
 
   def find_or_create_campaign_by_current
     return nil unless UniversalTrackManager.track_utms?
 
-    gen_sha1 = gen_campaign_key(permitted_utm_params)
+    params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
+
+    gen_sha1 = gen_campaign_key(params_without_glcid)
 
     # store_domain = PublicSuffix.domain(request.host)
     store_id = (@store.id if @store.present?)
     request_campaign = request.url.split('?')[0]
 
-    # find_or_create_by finding only by sha1 would be nice here, but how to do so with a dynamic set of columns?
-    # we've got a small chance of dups here due to the non-atomic find/create and sha1, but that's ok for this application.
-    c = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1)
-    c ||= UniversalTrackManager::Campaign.create(*permitted_utm_params.merge({ sha1: gen_sha1,
-                                                                               store_id:,
-                                                                               request_url: request_campaign }))
+    gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
+
+    campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
+                                                       gclid_present: gclid_present)
+    campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
+                                                                                      sha1: gen_sha1,
+                                                                                      store_id:,
+                                                                                      request_url: request_campaign,
+                                                                                      gclid_present: gclid_present
+                                                                                    }))
   end
 
   def gen_campaign_key(params)
