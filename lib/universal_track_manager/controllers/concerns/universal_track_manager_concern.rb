@@ -48,8 +48,8 @@ module UniversalTrackManagerConcern
       store_id:
     }
 
-    if request.referrer && !request.referrer.include?(request.host)
-      params[:referer] = request.referer if UniversalTrackManager.track_http_referrer?
+    if request.referer && !request.referer.include?(request.host) && UniversalTrackManager.track_http_referrer?
+      params[:referer] = request.referer
     end
 
     params[:browser] = find_or_create_browser_by_current if request.user_agent
@@ -59,10 +59,10 @@ module UniversalTrackManagerConcern
 
   def track_visitor
     # raise
-    if session['visit_id']
+    if session["visit_id"]
       # existing visit
       begin
-        existing_visit = UniversalTrackManager::Visit.find(session['visit_id'])
+        existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
 
         evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
 
@@ -70,10 +70,10 @@ module UniversalTrackManagerConcern
 
         evict_visit!(existing_visit) if existing_visit.browser && existing_visit.browser.name != user_agent
 
-        if (UniversalTrackManager.track_http_referrer?)
+        if UniversalTrackManager.track_http_referrer?
           if existing_visit.referer == request.referer
 
-          elsif request.referrer && !request.referrer.include?(request.host)
+          elsif request.referer && !request.referer.include?(request.host)
             evict_visit!(existing_visit)
           end
         end
@@ -105,14 +105,15 @@ module UniversalTrackManagerConcern
 
   def find_or_create_campaign_by_current
     return nil unless UniversalTrackManager.track_utms?
+    return nil if permitted_utm_params[:utm_source].blank?
 
     params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
 
     gen_sha1 = gen_campaign_key(params_without_glcid)
 
-    # store_domain = PublicSuffix.domain(request.host)
     store_id = (@store.id if @store.present?)
-    request_campaign = request.url.split('?')[0]
+
+    request_campaign = request.url.split("?")[0]
 
     gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
 
