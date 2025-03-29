@@ -102,8 +102,8 @@ module UniversalTrackManagerConcern
   end
 
   def find_or_create_campaign_by_current
-    # return nil unless UniversalTrackManager.track_utms?
-    # return nil if permitted_utm_params[:utm_source].blank?
+    return nil unless UniversalTrackManager.track_utms?
+    return nil if permitted_utm_params[:utm_source].blank?
 
     params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
 

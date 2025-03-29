@@ -37,7 +37,7 @@ module UniversalTrackManager
         exit
       end
 
-      @default_params = %w{utm_source utm_medium utm_campaign utm_content utm_term}
+      @default_params = %w{utm_id utm_source utm_medium utm_campaign utm_content utm_term}
 
       if options['add']
         options['add'].split(",").each  do |p|
