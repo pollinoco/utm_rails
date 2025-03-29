@@ -122,6 +122,7 @@ module UniversalTrackManagerConcern
                                                                                       request_url: request_campaign,
                                                                                       gclid_present: gclid_present
                                                                                     }))
+    raise
   end
 
   def gen_campaign_key(params)
