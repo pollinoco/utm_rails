@@ -37,6 +37,8 @@ module UniversalTrackManagerConcern
   end
 
   def new_visitor
+    return nil if permitted_utm_params[:utm_source].blank?
+
     store_id = (@store.id if @store.present?)
     params = {
       first_pageload: now,
