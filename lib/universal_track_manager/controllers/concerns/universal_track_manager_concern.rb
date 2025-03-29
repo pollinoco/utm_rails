@@ -77,7 +77,7 @@ module UniversalTrackManagerConcern
           end
         end
 
-        existing_visit.update_columns(last_pageload: Time.zone.now) # unless @visit_evicted
+        existing_visit.update_columns(last_pageload: Time.zone.now) unless @visit_evicted
       rescue ActiveRecord::RecordNotFound
         # this happens if the session table is cleared or if the record in the session
         # table points to a visit that has been cleared
@@ -106,7 +106,11 @@ module UniversalTrackManagerConcern
     return nil unless UniversalTrackManager.track_utms?
     return nil if permitted_utm_params[:utm_source].blank?
 
-    params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
+    # params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
+
+    params_without_glcid = permitted_utm_params.tap do |params|
+      params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "gclid"].include?(param) }
+    end
 
     gen_sha1 = gen_campaign_key(params_without_glcid)
 
@@ -122,7 +126,7 @@ module UniversalTrackManagerConcern
     campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
                                                                                       sha1: gen_sha1,
                                                                                       store_id:,
-                                                                                      request_url: params_without_glcid,
+                                                                                      request_url: request_campaign,
                                                                                       gclid_present: gclid_present
                                                                                     }))
   end
