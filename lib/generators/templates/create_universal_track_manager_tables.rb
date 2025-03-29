@@ -23,6 +23,7 @@ class CreateUniversalTrackManagerTables < ActiveRecord::Migration<%= migration_v
       add_index :campaigns, :sha1
 
       create_table :visits do |t|
+        t.integer :store_id
         t.datetime :first_pageload
         t.datetime :last_pageload
         t.integer :original_visit_id
