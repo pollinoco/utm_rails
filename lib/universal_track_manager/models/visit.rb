@@ -13,13 +13,13 @@ module UniversalTrackManager
       unless campaign
         # this visit has no campaign, which means all UTMs = null
         # if any of the UTMs are present, return false (they don't match null)
-        return UniversalTrackManager.campaign_column_symbols.none? do |key|
+        return UniversalTrackManager.campaign_column_hashed.none? do |key|
           params[key].present?
         end
       end
 
       # NOTE: params are allowed to be missing
-      UniversalTrackManager.campaign_column_symbols.each do |c|
+      UniversalTrackManager.campaign_column_hashed.each do |c|
         return false if (campaign[c] && (campaign[c] != params[c])) || (!campaign[c] && params[c])
       end
       true

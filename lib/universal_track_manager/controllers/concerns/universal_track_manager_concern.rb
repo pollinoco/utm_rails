@@ -67,7 +67,7 @@ module UniversalTrackManagerConcern
       begin
         existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
 
-        evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
+        evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(hashed_utm_params)
 
         evict_visit!(existing_visit) if existing_visit.ip_v4_address != ip_address
 
