@@ -43,6 +43,7 @@ module UniversalTrackManagerConcern
   def new_visitor
     return nil if permitted_utm_params[:utm_source].blank?
 
+    store_id = (@store.id if @store.present?)
     params = {
       first_pageload: now,
       last_pageload: now,
@@ -61,7 +62,6 @@ module UniversalTrackManagerConcern
   end
 
   def track_visitor
-    store_id = (@store.id if @store.present?)
     if session["pze_visit_id"]
       # existing visit
       begin
@@ -118,6 +118,8 @@ module UniversalTrackManagerConcern
 
     gen_sha1 = gen_campaign_key(hashed_utm_params)
 
+    store_id = (@store.id if @store.present?)
+
     request_campaign = request.url.split("?")[0]
 
     gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
@@ -138,6 +140,7 @@ module UniversalTrackManagerConcern
   end
 
   def evict_visit!(old_visit)
+    store_id = (@store.id if @store.present?)
     @visit_evicted = true
     params = {
       first_pageload: now,
