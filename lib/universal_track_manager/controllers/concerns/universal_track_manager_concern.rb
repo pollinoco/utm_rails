@@ -37,8 +37,6 @@ module UniversalTrackManagerConcern
   end
 
   def new_visitor
-    # store_domain = PublicSuffix.domain(request.host)
-    # store = Store.find_by_domain(store_domain)
     store_id = (@store.id if @store.present?)
     params = {
       first_pageload: now,
@@ -58,7 +56,6 @@ module UniversalTrackManagerConcern
   end
 
   def track_visitor
-    # raise
     if session["visit_id"]
       # existing visit
       begin
@@ -113,7 +110,7 @@ module UniversalTrackManagerConcern
 
     store_id = (@store.id if @store.present?)
 
-    request_campaign = request.url.split("?")[0]
+    request_campaign = request.url # .split("?")[0]
 
     gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
 
@@ -132,8 +129,6 @@ module UniversalTrackManagerConcern
   end
 
   def evict_visit!(old_visit)
-    # store_domain = PublicSuffix.domain(request.host)
-    # store = Store.find_by_domain(store_domain)
     store_id = (@store.id if @store.present?)
     @visit_evicted = true
     params = {
