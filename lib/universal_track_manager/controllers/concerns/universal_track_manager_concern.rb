@@ -57,30 +57,30 @@ module UniversalTrackManagerConcern
 
   def track_visitor
     if session["visit_id"]
-      # existing visit
-      begin
-        existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
+      # # existing visit
+      # begin
+      #   existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
 
-        evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
+      #   evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
 
-        evict_visit!(existing_visit) if existing_visit.ip_v4_address != ip_address
+      #   evict_visit!(existing_visit) if existing_visit.ip_v4_address != ip_address
 
-        evict_visit!(existing_visit) if existing_visit.browser && existing_visit.browser.name != user_agent
+      #   evict_visit!(existing_visit) if existing_visit.browser && existing_visit.browser.name != user_agent
 
-        if UniversalTrackManager.track_http_referrer?
-          if existing_visit.referer == request.referer
+      #   if UniversalTrackManager.track_http_referrer?
+      #     if existing_visit.referer == request.referer
 
-          elsif request.referer && !request.referer.include?(request.host)
-            evict_visit!(existing_visit)
-          end
-        end
+      #     elsif request.referer && !request.referer.include?(request.host)
+      #       evict_visit!(existing_visit)
+      #     end
+      #   end
 
-        existing_visit.update_columns(last_pageload: Time.zone.now) unless @visit_evicted
-      rescue ActiveRecord::RecordNotFound
-        # this happens if the session table is cleared or if the record in the session
-        # table points to a visit that has been cleared
-        new_visitor
-      end
+      #   existing_visit.update_columns(last_pageload: Time.zone.now) unless @visit_evicted
+      # rescue ActiveRecord::RecordNotFound
+      #   # this happens if the session table is cleared or if the record in the session
+      #   # table points to a visit that has been cleared
+      #   new_visitor
+      # end
     else
       new_visitor
     end
@@ -122,7 +122,6 @@ module UniversalTrackManagerConcern
                                                                                       request_url: request_campaign,
                                                                                       gclid_present: gclid_present
                                                                                     }))
-    raise
   end
 
   def gen_campaign_key(params)
