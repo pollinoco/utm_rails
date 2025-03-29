@@ -58,14 +58,14 @@ module UniversalTrackManagerConcern
 
     params[:browser] = find_or_create_browser_by_current if request.user_agent
     visit = UniversalTrackManager::Visit.create!(params)
-    session[:visit_id] = visit.id
+    session[:pze_visit_id] = visit.id
   end
 
   def track_visitor
-    if session["visit_id"]
+    if session["pze_visit_id"]
       # existing visit
       begin
-        existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
+        existing_visit = UniversalTrackManager::Visit.find(session["pze_visit_id"])
 
         evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(hashed_utm_params)
 
@@ -157,6 +157,6 @@ module UniversalTrackManagerConcern
 
     visit = UniversalTrackManager::Visit.create!(params)
 
-    session[:visit_id] = visit.id
+    session[:pze_visit_id] = visit.id
   end
 end
