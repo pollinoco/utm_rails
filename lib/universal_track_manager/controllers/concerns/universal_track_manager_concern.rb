@@ -59,7 +59,7 @@ module UniversalTrackManagerConcern
     if session["visit_id"]
       # # existing visit
       # begin
-      #   existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
+         existing_visit = UniversalTrackManager::Visit.find(session["visit_id"])
 
       #   evict_visit!(existing_visit) if any_utm_params? && !existing_visit.matches_all_utms?(permitted_utm_params)
 
@@ -75,13 +75,12 @@ module UniversalTrackManagerConcern
       #     end
       #   end
 
-      #   existing_visit.update_columns(last_pageload: Time.zone.now) unless @visit_evicted
+         existing_visit.update_columns(last_pageload: Time.zone.now) # unless @visit_evicted
       # rescue ActiveRecord::RecordNotFound
       #   # this happens if the session table is cleared or if the record in the session
       #   # table points to a visit that has been cleared
       #   new_visitor
       # end
-      new_visitor
     else
       new_visitor
     end
@@ -111,14 +110,14 @@ module UniversalTrackManagerConcern
 
     store_id = (@store.id if @store.present?)
 
-    request_campaign = request.url # .split("?")[0]
+    request_campaign = request.url.split("?")[0]
 
     gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
 
-    # campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
-    #                                                    gclid_present: gclid_present)
+    campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
+                                                       gclid_present: gclid_present)
 
-    campaign = UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
+    campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
                                                                                       sha1: gen_sha1,
                                                                                       store_id:,
                                                                                       request_url: request_campaign,
