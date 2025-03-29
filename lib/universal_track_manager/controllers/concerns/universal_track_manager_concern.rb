@@ -114,9 +114,10 @@ module UniversalTrackManagerConcern
 
     gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
 
-    campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
-                                                       gclid_present: gclid_present)
-    campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
+    # campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
+    #                                                    gclid_present: gclid_present)
+
+    campaign = UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
                                                                                       sha1: gen_sha1,
                                                                                       store_id:,
                                                                                       request_url: request_campaign,
