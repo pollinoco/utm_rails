@@ -43,7 +43,7 @@ module UniversalTrackManager
   end
 
   def self.campaign_column_symbols
-    @campaign_column_symbols ||= @_settings.campaign_columns.split(',').map{|c| c.to_sym}
+    @campaign_column_symbols ||= @_settings.campaign_columns.split(',').map(&:to_sym)
   end
 
 end
