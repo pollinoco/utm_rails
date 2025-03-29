@@ -108,9 +108,11 @@ module UniversalTrackManagerConcern
 
     # params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
 
-    params_without_glcid = permitted_utm_params.tap do |params|
-      params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "gclid"].include?(param) }
-    end
+    # params_without_glcid = permitted_utm_params.tap do |params|
+    #   params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "fbclid", "gclid"].include?(param) }
+    # end
+
+    params_without_glcid = "utm_source,utm_medium,utm_campaign".split(",").map(&:to_sym)
 
     gen_sha1 = gen_campaign_key(params_without_glcid)
 
