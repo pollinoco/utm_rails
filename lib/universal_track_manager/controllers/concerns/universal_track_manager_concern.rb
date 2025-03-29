@@ -122,7 +122,7 @@ module UniversalTrackManagerConcern
     campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
                                                                                       sha1: gen_sha1,
                                                                                       store_id:,
-                                                                                      request_url: request_campaign,
+                                                                                      request_url: params_without_glcid,
                                                                                       gclid_present: gclid_present
                                                                                     }))
   end
