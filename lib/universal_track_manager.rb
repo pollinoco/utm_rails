@@ -9,6 +9,7 @@ module UniversalTrackManager
                   :track_user_agent,
                   :track_http_referrer,
                   :campaign_columns,
+                  :hashed_columns,
                   :track_gclid_present
   end
 
@@ -44,6 +45,10 @@ module UniversalTrackManager
 
   def self.campaign_column_symbols
     @campaign_column_symbols ||= @_settings.campaign_columns.split(',').map(&:to_sym)
+  end
+
+  def self.campaign_column_hashed
+    @campaign_column_hashed ||= @_settings.hashed_columns.split(',').map(&:to_sym)
   end
 
 end

@@ -20,6 +20,10 @@ module UniversalTrackManagerConcern
     params.permit(*UniversalTrackManager.campaign_column_symbols)
   end
 
+  def hashed_utm_params
+    params.permit(*UniversalTrackManager.campaign_column_hashed)
+  end
+
   def ip_address
     return nil unless UniversalTrackManager.track_ips?
 
@@ -106,15 +110,13 @@ module UniversalTrackManagerConcern
     return nil unless UniversalTrackManager.track_utms?
     return nil if permitted_utm_params[:utm_source].blank?
 
-    # params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
+    params_without_glcid = permitted_utm_params.tap { |x| x.delete("gclid") }
 
-    params_without_glcid = permitted_utm_params.tap do |params|
-      params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "fbclid", "gclid"].include?(param) }
-    end
+    # params_without_glcid = permitted_utm_params.tap do |params|
+    #   params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "fbclid", "gclid"].include?(param) }
+    # end
 
-    # params_without_glcid = "utm_source,utm_medium,utm_campaign".split(",").map(&:to_sym)
-
-    gen_sha1 = gen_campaign_key(params_without_glcid)
+    gen_sha1 = gen_campaign_key(hashed_utm_params)
 
     store_id = (@store.id if @store.present?)
 
