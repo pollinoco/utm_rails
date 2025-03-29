@@ -112,7 +112,7 @@ module UniversalTrackManagerConcern
     #   params.delete_if { |param| ["utm_id", "utm_term", "utm_content", "fbclid", "gclid"].include?(param) }
     # end
 
-    params_without_glcid = "utm_source,utm_medium,utm_campaign".split(",").map(&:to_sym)
+    params_without_glcid = "utm_source,utm_medium,utm_campaign".split(",").map{|c| c.to_sym}
 
     gen_sha1 = gen_campaign_key(params_without_glcid)
 
