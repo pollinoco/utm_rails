@@ -81,6 +81,7 @@ module UniversalTrackManagerConcern
       #   # table points to a visit that has been cleared
       #   new_visitor
       # end
+      new_visitor
     else
       new_visitor
     end
