@@ -110,18 +110,20 @@ module UniversalTrackManagerConcern
     return nil unless UniversalTrackManager.track_utms?
     return nil unless permitted_utm_params[:utm_source].present? || permitted_utm_params[:gclid].present?
 
+    params_without_glcid = permitted_utm_params.tap { |x| x.delete("ddd") }
+
     gen_sha1 = gen_campaign_key(hashed_utm_params)
 
     store_id = (@store.id if @store.present?)
 
     request_campaign = request.url.split("?")[0]
 
-    gclid_present = UniversalTrackManager.track_gclid_present? && permitted_utm_params[:gclid].present?
+    gclid_present = true if permitted_utm_params[:gclid].present?
 
     campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
                                                        gclid_present: gclid_present)
 
-    campaign ||= UniversalTrackManager::Campaign.create(*permitted_utm_params.merge({
+    campaign ||= UniversalTrackManager::Campaign.create(*params_without_glcid.merge({
                                                                                       sha1: gen_sha1,
                                                                                       store_id:,
                                                                                       request_url: request_campaign,
