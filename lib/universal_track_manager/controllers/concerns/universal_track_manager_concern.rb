@@ -41,7 +41,7 @@ module UniversalTrackManagerConcern
   end
 
   def new_visitor
-    return nil unless permitted_utm_params[:utm_source].present? || permitted_utm_params[:gclid].present?
+    return nil unless permitted_utm_params[:utm_source].present? && !permitted_utm_params[:gclid].blank?
 
     store_id = (@store.id if @store.present?)
     params = {
@@ -108,10 +108,7 @@ module UniversalTrackManagerConcern
 
   def find_or_create_campaign_by_current
     return nil unless UniversalTrackManager.track_utms?
-
-    if permitted_utm_params[:gclid].blank?
-      return nil unless permitted_utm_params[:utm_source].present?
-    end
+    return nil unless permitted_utm_params[:utm_source].present? && !permitted_utm_params[:gclid].blank?
 
     gen_sha1 = gen_campaign_key(hashed_utm_params)
 
