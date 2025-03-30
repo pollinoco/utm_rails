@@ -108,9 +108,12 @@ module UniversalTrackManagerConcern
 
   def find_or_create_campaign_by_current
     return nil unless UniversalTrackManager.track_utms?
-    return nil unless permitted_utm_params[:utm_source].present? || permitted_utm_params[:gclid].present?
 
-    params_without_glcid = permitted_utm_params.tap { |x| x.delete("ddd") }
+    if permitted_utm_params[:gclid].blank?
+      return nil unless permitted_utm_params[:utm_source].present?
+    end
+
+    params_without_glcid = permitted_utm_params # .tap { |x| x.delete("gclid") }
 
     gen_sha1 = gen_campaign_key(hashed_utm_params)
 
@@ -118,7 +121,7 @@ module UniversalTrackManagerConcern
 
     request_campaign = request.url.split("?")[0]
 
-    gclid_present = true if permitted_utm_params[:gclid].present?
+    gclid_present = permitted_utm_params[:gclid].present?
 
     campaign = UniversalTrackManager::Campaign.find_by(sha1: gen_sha1,
                                                        gclid_present: gclid_present)
