@@ -41,7 +41,7 @@ module UniversalTrackManagerConcern
   end
 
   def new_visitor
-    if permitted_utm_params[:gclid].blank?
+    if permitted_utm_params[:gclid].blank? || permitted_utm_params[:srsltid].blank?
       return nil unless permitted_utm_params[:utm_source].present?
     end
 
@@ -111,7 +111,7 @@ module UniversalTrackManagerConcern
   def find_or_create_campaign_by_current
     return nil unless UniversalTrackManager.track_utms?
 
-    if permitted_utm_params[:gclid].blank?
+    if permitted_utm_params[:gclid].blank? || permitted_utm_params[:srsltid].blank?
       return nil unless permitted_utm_params[:utm_source].present?
     end
 
