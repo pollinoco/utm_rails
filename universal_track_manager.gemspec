@@ -1,12 +1,11 @@
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "version.rb"
+require "version"
 
 Gem::Specification.new do |s|
   s.name        = 'universal-track-manager'
   s.version     = UniversalTrackManager::VERSION
   s.license     = 'MIT'
-  s.date        = Time.now.strftime("%Y-%m-%d")
   s.summary     = "A gem to track visitors and their UTMs to your website."
   s.description = "Simple, plug & play visitor tracking by user agent (browser), IP address, referer, and UTM parameters."
   s.authors     = ["Jason Fleetwood-Boldt"]
@@ -24,8 +23,8 @@ Gem::Specification.new do |s|
                     "homepage_uri" => 'https://heliosdev.shop/p/universal-track-manager'}
 
 
-  s.add_dependency('rails', '> 5.1')
-  s.add_dependency('public_suffix')
+  s.required_ruby_version = ">= 3.2"
+  s.add_dependency("rails", ">= 7.1")
   s.add_development_dependency('simplecov')
   s.add_development_dependency('simplecov-rcov')
   s.add_development_dependency('appraisal', '> 2.2')

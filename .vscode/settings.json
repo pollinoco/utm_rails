@@ -1,0 +1,41 @@
+{
+  "editor.minimap.enabled": false,
+  "editor.fontSize": 19,
+  "editor.tabSize": 2,
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.fontLigatures": false,
+  "editor.scrollbar.vertical": "visible",
+  "editor.guides.indentation": true,
+  "explorer.confirmDragAndDrop": false,
+  "terminal.integrated.fontSize": 16,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "window.zoomLevel": 1,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "extensions.ignoreRecommendations": true,
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.axlsx": "ruby",
+    "*.html.erb": "erb"
+  },
+  "[erb]": {
+    "editor.defaultFormatter": "aliariff.vscode-erb-beautify",
+    "editor.formatOnSave": true
+  },
+  "workbench.colorTheme": "Cobalt2",
+  "workbench.editor.languageDetection": true,
+  "workbench.startupEditor": "newUntitledFile",
+  "emmet.triggerExpansionOnTab": true,
+  "redhat.telemetry.enabled": false,
+  "workbench.preferredDarkColorTheme": "Cobalt2",
+  "editor.fontVariations": false,
+  "editor.linkedEditing": true
+}

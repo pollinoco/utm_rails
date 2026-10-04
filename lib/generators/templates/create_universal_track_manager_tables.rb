@@ -12,7 +12,9 @@ class CreateUniversalTrackManagerTables < ActiveRecord::Migration<%= migration_v
 
       create_table :campaigns do |t|
         # this table gets automatically populated by inbound traffic
-#GENERATOR INSERTS CAMPAIGN COLUMNS HERE
+<% prepare_campaign_columns!.each do |column| %>
+        t.string :<%= column %>, limit: 256
+<% end %>
         t.string :request_url
         t.integer :store_id
         t.string :sha1, limit: 40
@@ -21,6 +23,7 @@ class CreateUniversalTrackManagerTables < ActiveRecord::Migration<%= migration_v
       end
 
       add_index :campaigns, :sha1
+      add_index :campaigns, [ :store_id, :sha1, :gclid_present ], name: "index_campaigns_on_store_sha1_and_gclid"
 
       create_table :visits do |t|
         t.integer :store_id
